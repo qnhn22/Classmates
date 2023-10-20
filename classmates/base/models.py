@@ -22,8 +22,8 @@ class Room(models.Model):
 
     class Meta:
         ordering = ['-updated', '-created']
-    # return string presentation
 
+    # return string presentation
     def __str__(self) -> str:
         return str(self.name)
 

@@ -7,20 +7,28 @@
 </style>
 <div class="home-container">
   <div>
-    <h3>Browse Classes</h3>
+    <h3>Browse Majors</h3>
+    <br>
     <hr>
+    <div>
+      <a href="{% url 'home' %}">All</a>
+    </div> {% for topic in topics %} <div>
+      <a href="{% url 'home' %}?major={{topic.name}}">{{ topic.name }}</a>
+    </div> {% endfor %}
   </div>
-  <a href="{% url 'create-room' %}">Create Room</a>
-  <br>
-  <br>
-  <br>
-  <div> {% for room in rooms %} <div>
-      <a href="{% url 'update-room' room.id %}">Edit</a>
-      <a href="{% url 'delete-room' room.id %}">Delete</a>
-      <span>@{{ room.host.username }}</span>
-      <h5>{{room.id}} -- <a href="/room/{{room.id}}">{{room.name}}</a></h5>
-      <small>{{ room.topic.name }}</small>
+  <div>
+    <a href="{% url 'create-room' %}">Create Room</a>
+    <br>
+    <br>
+    <br>
+    <div> {% for room in rooms %} <div>
+        <a href="{% url 'update-room' room.id %}">Edit</a>
+        <a href="{% url 'delete-room' room.id %}">Delete</a>
+        <span>@{{ room.host.username }}</span>
+        <h5>{{room.id}} -- <a href="/room/{{room.id}}">{{room.name}}</a></h5>
+        <small>{{ room.topic.name }}</small>
+      </div>
+      <hr> {% endfor %}
     </div>
-    <hr> {% endfor %}
   </div>
 </div> {% endblock %}
