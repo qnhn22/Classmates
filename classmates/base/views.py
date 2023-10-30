@@ -1,15 +1,26 @@
 from django.shortcuts import render, redirect
 from django.db.models import Q
-from .models import Room, Topic
+from django.contrib.auth.models import User
+from .models import Room, Topic, Message
 from .forms import RoomForm
+from django.contrib import messages
 
-# Create your views here.
+# def registerPage(request):
 
-# rooms = [
-#     {'id': 1, 'name': 'abc'},
-#     {'id': 2, 'name': 'jkl'},
-#     {'id': 3, 'name': 'xcv'},
-# ]
+# def loginPage(request):
+#     if request.method == 'POST':
+#         username = request.POST.get('username')
+#         password = request.POST.get('password')
+
+#         try:
+#             user = User.objects.get(username=username)
+#         except:
+#             messages.error(request, "User does not exist")
+
+#     context = {}
+#     return render(request, 'base/login_registration.html', context)
+
+# def logoutApp(request):
 
 
 def home(request):
@@ -23,7 +34,6 @@ def home(request):
         Q(topic__name__icontains=major) & Q(name__icontains=class_name))
 
     topics = Topic.objects.all()
-    print(topics)
 
     context = {'rooms': rooms, 'topics': topics}
     return render(request, 'base/home.html', context)
@@ -31,7 +41,13 @@ def home(request):
 
 def room(request, pk):
     room = Room.objects.get(id=pk)
-    context = {'room': room}
+    room_messages = room.message_set.all().order_by('-created')
+    participants = room.participants.all()
+    context = {
+        'room': room,
+        'room_messages': room_messages,
+        'participants': participants
+    }
     return render(request, 'base/room.html', context)
 
 
@@ -67,3 +83,11 @@ def deleteRoom(request, pk):
         room.delete()
         return redirect('home')
     return render(request, 'base/delete.html', {'obj': room})
+
+
+def deleteMessage(request, pk):
+    message = Message.objects.get(id=pk)
+    if request.method == 'POST':
+        message.delete()
+        return redirect('home')
+    return render(request, 'base/delete.html', {'obj': message})
